@@ -1,4 +1,4 @@
-package com.hnp.iot.data.ingestion.bdd.steps;
+package com.hnp.iot.ingestion.bdd.steps;
 
 import io.cucumber.java8.En;
 

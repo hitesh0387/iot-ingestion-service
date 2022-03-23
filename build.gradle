@@ -28,10 +28,10 @@ sourceSets {
         java {
             compileClasspath += main.output + test.output
             runtimeClasspath += main.output + test.output
-            srcDir file('src/bdd-test/java')
+            srcDir file('src/integ-test/java')
         }
         resources {
-            srcDir file('src/bdd-test/resources')
+            srcDir file('src/integ-test/resources')
         }
     }
 }
@@ -83,21 +83,21 @@ test {
 
 // Cucumber Settings
 configurations {
-    cucumberRuntime {
-        extendsFrom implementation
-    }
+    cucumberRuntime.extendsFrom implementation
 }
 
 // BDD task
 task integrationTest(type: Test) {
+    group = 'verification'
     testClassesDirs = project.sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
-    group "verification"
     dependsOn assemble, testClasses
+    outputs.upToDateWhen { false }
+    mustRunAfter test
     doLast {
         javaexec {
-            main = "io.cucumber.core.cli.Main"
-            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            main "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.integrationTest.runtimeClasspath
         }
     }
 }

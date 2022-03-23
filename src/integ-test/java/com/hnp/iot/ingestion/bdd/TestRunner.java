@@ -1,4 +1,4 @@
-package com.hnp.iot.data.ingestion.bdd;
+package com.hnp.iot.ingestion.bdd;
 
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
@@ -7,8 +7,8 @@ import org.springframework.test.context.ActiveProfiles;
 
 @RunWith(Cucumber.class)
 @ActiveProfiles("bdd")
-@CucumberOptions(features = {"src/bdd-test/resources/features"},
-        glue = {"com.hnp.iot.data.ingestion.bdd.steps"},
+@CucumberOptions(features = {"src/integ-test/resources"},
+        glue = {"com.hnp.iot.ingestion.bdd.steps"},
         plugin = {"pretty", "json:build/bdd-reports/cucumber-reports.json", "html:build/bdd-reports/index.html", "junit:build/bdd-reports/feature-overview.html"})
 public class TestRunner {
 }
