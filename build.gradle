@@ -1,0 +1,103 @@
+plugins {
+    id 'org.springframework.boot' version '2.5.10'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group 'com.hnp.iot'
+version '1.0-SNAPSHOT'
+targetCompatibility = '17'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+// Defining the versions for maven dependencies
+ext {
+    lombokVersion = '1.18.22'
+    jacksonVersion = '2.13.2'
+    liquibaseVersion = '4.9.0'
+    junitVersion = '5.4.0'
+    cucmberVersion = '7.2.3'
+    junitVintageVersion = '5.8.2'
+}
+
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/bdd-test/java')
+        }
+        resources {
+            srcDir file('src/bdd-test/resources')
+        }
+    }
+}
+
+configurations {
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntime.extendsFrom testRuntime
+}
+
+dependencies {
+    // Spring-boot dependencies
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.kafka:spring-kafka"
+
+    // Jackson dependencies
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+
+    // Lombok dependencies
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    implementation "org.postgresql:postgresql"
+
+    // Liquibase dependency
+    implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
+
+    // junit-dependencies
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: "junit", module: "junit"
+        exclude group: "org.junit.vintage", module: "junit-vintage-engine"
+    }
+    testImplementation "org.springframework.kafka:spring-kafka-test"
+    testImplementation "org.junit:junit-bom:${junitVersion}"
+    testImplementation("org.junit.jupiter:junit-jupiter")
+
+    // BDD dependencies
+    integrationTestImplementation "io.cucumber:cucumber-java8:${cucmberVersion}"
+    integrationTestImplementation "io.cucumber:cucumber-junit:${cucmberVersion}"
+    implementation group: "io.cucumber", name: "cucumber-spring", version: "${cucmberVersion}"
+    integrationTestImplementation "org.junit.vintage:junit-vintage-engine:${junitVintageVersion}"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+// Cucumber Settings
+configurations {
+    cucumberRuntime {
+        extendsFrom implementation
+    }
+}
+
+// BDD task
+task integrationTest(type: Test) {
+    testClassesDirs = project.sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    group "verification"
+    dependsOn assemble, testClasses
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+        }
+    }
+}

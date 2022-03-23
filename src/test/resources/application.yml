@@ -1,0 +1,9 @@
+spring:
+  application-name: iot-ingestion-service
+  liquibase:
+    enabled: false
+iot:
+  ingestion:
+    kafka:
+      topic: iot_ingestion_topic
+      consumer-group-id: iot-ingestion-group
