@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Consumes the data pushed by IoT sensors & calls services to process & store the same
+ */
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -19,6 +22,11 @@ public class IoTDataListener {
     private final IoTIngestionService ioTIngestionService;
     private final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
+    /**
+     * Consumes the messages pushed by IoT sensors & calls services to process & store the same
+     *
+     * @param timeSeriesMessage - Payload from Kafka topic
+     */
     @KafkaListener(topics = "${iot.ingestion.kafka.topic}", groupId = "${iot.ingestion.kafka.consumer-group-id}")
     public void onData(Message<TimeSeries> timeSeriesMessage) {
         this.executorService.submit(() -> this.ingestIoTData(timeSeriesMessage));
