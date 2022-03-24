@@ -38,8 +38,10 @@ sourceSets {
 }
 
 configurations {
+    integrationTestCompileOnly.extendsFrom compileOnly
     integrationTestImplementation.extendsFrom testImplementation
     integrationTestRuntime.extendsFrom testRuntime
+    integrationTestAnnotationProcessor.extendsFrom annotationProcessor
 }
 
 dependencies {
@@ -52,6 +54,7 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
     implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
     // Lombok dependencies
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
@@ -99,6 +102,14 @@ task integrationTest(type: Test) {
         javaexec {
             main "io.cucumber.core.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.integrationTest.runtimeClasspath
+            args = [
+                    "--plugin", "pretty",
+                    "--plugin", "json:build/bdd-reports/cucumber-reports.json",
+                    "--plugin", "html:build/bdd-reports/index.html",
+                    "--plugin", "junit:build/bdd-reports/feature-overview.html",
+                    "--glue", "com.hnp.iot.ingestion.bdd.steps",
+                    "src/integ-test/resources"
+            ]
         }
     }
 }

@@ -3,10 +3,8 @@ package com.hnp.iot.ingestion.bdd;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.ActiveProfiles;
 
-@RunWith(Cucumber.class)
-@ActiveProfiles("bdd")
+//@RunWith(Cucumber.class)
 @CucumberOptions(
         features = {
                 "src/integ-test/resources"

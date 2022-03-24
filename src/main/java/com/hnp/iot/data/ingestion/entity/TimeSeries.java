@@ -8,18 +8,21 @@ import lombok.ToString;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @ToString
-@Entity(name = "time_series")
+@Entity
+@Table(name = "time_series", schema = "iot")
 public class TimeSeries {
 
     @Id
-    @GeneratedValue
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "sensor_id")
     private String sensorId;
@@ -34,6 +37,6 @@ public class TimeSeries {
     private float methaneConcentration;
 
     @Column(name = "reading_time_stamp")
-    @JsonFormat(timezone = "UTC", pattern = "yyyy-MMM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "UTC", pattern = "yyyy-MMM-dd HH:mm:ss")
     private LocalDateTime readingTimeStamp;
 }

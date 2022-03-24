@@ -2,20 +2,21 @@ package com.hnp.iot.ingestion.bdd.steps;
 
 import com.hnp.iot.data.ingestion.IoTIngestionApplication;
 import io.cucumber.spring.CucumberContextConfiguration;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
 @CucumberContextConfiguration
-@SpringBootTest(classes = {IoTIngestionApplication.class})
 @ActiveProfiles("bdd")
+@SpringBootTest(classes = {IoTIngestionApplication.class})
+@EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
+@Slf4j
 public class TestContext {
 
     @Test
     public void testIngestion() {
-        System.out.println("Testing");
+        log.info("----------------- Started ingestion integration testing -----------------");
     }
 }

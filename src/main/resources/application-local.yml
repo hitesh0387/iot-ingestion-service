@@ -19,9 +19,9 @@ spring:
           batch_size: 10
   datasource:
     platform: postgres
-    url: <DB_URL>
-    username: <DB_USER_NAME>
-    password: <DB_PASSWORD>
+    url: jdbc:postgresql://localhost:5433/iot-db
+    username: postgres
+    password: P@55w0rd@123
     driverClassName: org.postgresql.Driver
   liquibase:
     enabled: true
