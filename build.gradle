@@ -81,7 +81,9 @@ dependencies {
     integrationTestImplementation "org.junit.vintage:junit-vintage-engine:${junitVintageVersion}"
 }
 
-test {
+tasks.withType(Test) {
+    testLogging.showStandardStreams = true
+    testLogging.exceptionFormat = 'full'
     useJUnitPlatform()
 }
 
